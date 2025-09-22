@@ -31,21 +31,16 @@ st.markdown("""
 st.title("🎪 PlanWise - Smart Event Planner")
 st.subheader("AI-powered interactive event management system")
 
-# -------------------------------
-# Step 1: User Input Form
-# -------------------------------
-with st.container():
-    st.markdown("### Step 1: Enter Event Details")
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        event_type = st.selectbox("Event Type", ["Conference", "Concert", "Festival", "Networking Event", "Exhibition", "Workshop"])
-    with col2:
-        duration = st.number_input("Duration (hours)", min_value=1, max_value=24, step=1)
-    with col3:
-        budget = st.number_input("Budget (₹)", min_value=1000, step=500)
-    with col4:
-        catering = st.selectbox("Catering Required?", ["Yes", "No"])
+st.markdown("### Step 1: Enter Event Details")
+
+event_type = st.selectbox("Event Type", ["Conference", "Concert", "Festival", "Networking Event", "Exhibition", "Workshop"])
+
+duration = st.number_input("Duration (hours)", min_value=1, max_value=24, step=1)
+
+budget = st.number_input("Budget (₹)", min_value=1000, step=500)
+
+catering = st.selectbox("Catering Required?", ["Yes", "No"])
+
 
 # -------------------------------
 # Step 2: AI1 - LLM Summary & Suggestions
