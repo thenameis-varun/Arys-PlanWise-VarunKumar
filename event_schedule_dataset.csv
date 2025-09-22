@@ -1,0 +1,169 @@
+Event_ID,Event_Type,Budget (SAR),Number_of_Attendees,Event_Duration (hours),Catering_Required,Tech_Requirements,Audience_Type,Season
+1,Networking Event,50982,4702,10,No,High,Mixed,Winter
+2,Networking Event,11643,1093,4,No,Medium,Families,Summer
+4,Seminar,181915,3030,11,No,Low,Public,Winter
+6,Conference,122987,2499,11,No,Medium,Professionals,Winter
+7,Conference,293328,4672,12,No,Medium,Public,Winter
+8,Festival,196514,4502,1,Yes,Medium,Families,Winter
+9,Networking Event,179281,4843,5,Yes,Medium,Families,Summer
+10,Concert,71957,4370,12,No,Medium,Mixed,Fall
+11,Concert,103333,2000,6,No,Low,Public,Summer
+12,Exhibition,104685,4808,6,No,Medium,Professionals,Fall
+13,Workshop,94767,2583,4,No,Low,Students,Summer
+14,Networking Event,101645,4696,9,No,Medium,Professionals,Fall
+15,Concert,160112,3132,5,No,Medium,Public,Summer
+16,Workshop,162441,3828,2,Yes,High,Public,Fall
+19,Seminar,104848,4286,10,No,Medium,Public,Fall
+20,Seminar,168005,3923,11,Yes,High,Public,Spring
+21,Networking Event,35806,1023,3,Yes,High,Mixed,Spring
+22,Workshop,163175,4869,8,Yes,Medium,Public,Summer
+23,Festival,16314,2503,7,Yes,Low,Families,Spring
+24,Seminar,35332,1875,9,Yes,Medium,Families,Spring
+25,Exhibition,269214,4884,1,Yes,Low,Mixed,Spring
+26,Networking Event,24826,956,4,No,High,Public,Fall
+27,Workshop,121805,2177,1,Yes,Low,Students,Summer
+28,Exhibition,12723,1316,3,No,Low,Mixed,Summer
+29,Seminar,269051,1170,5,No,High,Professionals,Winter
+31,Concert,267467,4798,11,No,Low,Families,Spring
+32,Workshop,71427,1430,4,No,High,Professionals,Spring
+33,Exhibition,175149,1711,12,No,Low,Mixed,Spring
+34,Concert,212836,3188,4,No,High,Professionals,Summer
+35,Networking Event,49363,950,10,No,Medium,Public,Fall
+36,Exhibition,59416,1358,7,Yes,Low,Families,Fall
+37,Networking Event,282968,4300,4,No,Medium,Public,Fall
+38,Seminar,212116,316,7,No,Medium,Professionals,Winter
+41,Festival,298874,276,6,No,Low,Mixed,Fall
+42,Conference,87471,4693,1,Yes,Medium,Professionals,Spring
+43,Festival,78213,2033,4,No,Low,Professionals,Spring
+44,Conference,43903,82,4,No,Medium,Mixed,Winter
+45,Exhibition,139914,3171,2,No,Medium,Mixed,Spring
+46,Seminar,209543,4186,2,No,Low,Families,Spring
+48,Workshop,273288,715,11,Yes,High,Mixed,Summer
+49,Festival,115254,3839,7,Yes,High,Students,Spring
+50,Festival,138259,1231,12,No,High,Mixed,Winter
+52,Festival,136112,1845,7,No,Low,Students,Winter
+53,Conference,258577,2584,9,Yes,High,Students,Fall
+54,Festival,183640,2480,10,No,High,Mixed,Spring
+55,Conference,215495,4766,8,Yes,Medium,Public,Fall
+56,Conference,46469,3229,2,No,Low,Professionals,Fall
+57,Festival,43253,1390,2,Yes,High,Public,Fall
+59,Seminar,129119,723,7,No,Low,Public,Fall
+60,Exhibition,21076,4185,8,Yes,High,Mixed,Spring
+61,Conference,45660,1623,1,No,Low,Students,Spring
+63,Workshop,61357,1412,1,Yes,High,Students,Winter
+64,Festival,267988,863,12,Yes,Medium,Mixed,Fall
+65,Festival,200628,2985,7,Yes,Medium,Mixed,Fall
+66,Conference,217626,2294,9,No,Medium,Families,Summer
+67,Networking Event,32705,1628,4,Yes,Low,Professionals,Spring
+68,Exhibition,116270,1965,12,Yes,Medium,Professionals,Spring
+69,Festival,102753,837,10,Yes,Low,Public,Winter
+70,Festival,68238,3742,9,Yes,Medium,Mixed,Spring
+72,Conference,263189,1466,1,No,Medium,Mixed,Winter
+73,Workshop,284820,4838,5,No,Low,Public,Spring
+74,Workshop,155569,2480,8,Yes,High,Students,Summer
+75,Workshop,106676,1413,12,Yes,Low,Public,Fall
+76,Networking Event,214292,1353,8,No,Low,Families,Fall
+78,Concert,58282,4439,11,No,Low,Students,Fall
+79,Exhibition,48119,3009,2,No,Low,Families,Fall
+80,Seminar,120700,993,9,No,Medium,Families,Winter
+82,Festival,61665,2179,1,Yes,High,Students,Winter
+83,Seminar,154798,3684,4,Yes,High,Families,Summer
+84,Networking Event,72795,1298,11,No,High,Families,Spring
+85,Conference,49970,1632,12,No,Low,Mixed,Summer
+86,Exhibition,85926,2923,6,Yes,Medium,Families,Winter
+87,Festival,274514,4600,10,No,Medium,Students,Winter
+88,Exhibition,198078,748,9,Yes,High,Students,Spring
+89,Exhibition,156962,3348,8,Yes,Low,Mixed,Winter
+91,Exhibition,238774,4146,12,Yes,High,Professionals,Spring
+92,Festival,242536,613,6,Yes,High,Professionals,Winter
+93,Exhibition,266610,1838,7,No,Low,Mixed,Spring
+95,Networking Event,97115,4548,1,No,Medium,Public,Spring
+96,Exhibition,122985,2976,4,Yes,Medium,Public,Fall
+97,Conference,83477,131,3,Yes,High,Families,Spring
+98,Networking Event,83095,4656,9,Yes,High,Mixed,Winter
+99,Networking Event,33695,1091,7,Yes,Medium,Families,Fall
+100,Exhibition,248249,4880,6,Yes,High,Families,Spring
+101,Seminar,186048,3835,3,No,Low,Mixed,Spring
+103,Exhibition,256845,4617,9,Yes,Low,Professionals,Fall
+105,Exhibition,220035,2246,2,No,Medium,Mixed,Winter
+106,Workshop,200044,1689,11,No,High,Mixed,Winter
+107,Exhibition,20385,4680,10,Yes,Low,Public,Summer
+108,Conference,277234,3946,8,Yes,High,Mixed,Summer
+109,Workshop,61889,2256,12,Yes,Low,Mixed,Spring
+110,Concert,75688,4693,10,Yes,High,Students,Summer
+111,Conference,173773,2397,2,Yes,High,Public,Spring
+112,Festival,174068,3104,1,Yes,Low,Mixed,Winter
+113,Exhibition,297939,280,1,Yes,Medium,Professionals,Summer
+114,Festival,199294,1351,10,Yes,Low,Students,Fall
+115,Concert,257092,4561,11,Yes,Low,Families,Fall
+116,Conference,61231,223,3,No,Medium,Families,Fall
+117,Exhibition,143594,408,2,No,High,Professionals,Fall
+118,Seminar,181650,3664,8,No,Medium,Families,Summer
+120,Festival,58423,2462,4,Yes,Medium,Mixed,Summer
+121,Conference,264134,4251,12,Yes,High,Families,Spring
+122,Workshop,88504,4649,5,Yes,Low,Mixed,Spring
+123,Networking Event,41039,2933,4,No,Low,Professionals,Fall
+124,Conference,157977,1256,1,No,Medium,Families,Winter
+126,Concert,146387,1112,10,No,Low,Professionals,Winter
+127,Seminar,241137,4922,5,No,Low,Professionals,Spring
+129,Workshop,131264,2048,2,No,High,Mixed,Fall
+130,Workshop,165770,4792,1,Yes,Medium,Public,Fall
+131,Networking Event,240842,3336,8,No,Medium,Professionals,Spring
+132,Seminar,59926,558,8,No,Medium,Mixed,Fall
+133,Workshop,40777,4999,3,No,High,Public,Summer
+135,Conference,38085,3439,7,No,Medium,Public,Summer
+136,Seminar,38998,1759,6,Yes,High,Families,Winter
+137,Concert,11968,3311,9,No,High,Professionals,Spring
+138,Concert,134922,3813,1,No,Low,Families,Spring
+139,Workshop,122001,3004,11,Yes,Medium,Students,Fall
+140,Workshop,171238,1753,2,Yes,Medium,Families,Fall
+141,Concert,212539,2016,8,Yes,High,Public,Winter
+142,Networking Event,171642,2746,2,Yes,Medium,Public,Fall
+143,Networking Event,219618,3848,8,No,Medium,Students,Spring
+144,Networking Event,57117,4064,10,No,Medium,Families,Spring
+145,Concert,217732,1604,3,Yes,Low,Professionals,Summer
+146,Concert,75548,3438,2,Yes,Medium,Families,Winter
+147,Seminar,292432,4011,9,Yes,High,Students,Fall
+148,Seminar,248652,4291,11,Yes,High,Mixed,Fall
+149,Networking Event,187359,772,11,Yes,Low,Families,Spring
+150,Festival,143284,3064,2,No,High,Mixed,Winter
+151,Networking Event,154701,486,5,Yes,High,Professionals,Summer
+152,Conference,59630,3604,6,Yes,Low,Public,Summer
+153,Networking Event,275163,4139,5,Yes,Medium,Mixed,Winter
+154,Networking Event,18139,2549,12,Yes,Low,Professionals,Summer
+156,Festival,268937,3776,12,Yes,Medium,Students,Summer
+157,Conference,15659,2324,5,Yes,Low,Public,Summer
+158,Concert,201863,1150,1,No,High,Mixed,Fall
+159,Networking Event,49441,2893,11,Yes,Medium,Families,Summer
+160,Concert,100800,2653,1,Yes,High,Public,Spring
+164,Conference,200469,2982,10,Yes,Medium,Professionals,Summer
+165,Conference,78429,2002,11,No,High,Families,Summer
+166,Networking Event,286939,4103,11,No,Low,Professionals,Fall
+167,Networking Event,289836,4685,2,No,High,Mixed,Winter
+168,Seminar,62229,1445,10,Yes,High,Families,Spring
+169,Workshop,182343,1457,8,No,Medium,Students,Spring
+170,Seminar,162768,3727,2,No,Low,Mixed,Spring
+171,Conference,297748,4053,11,Yes,Low,Public,Summer
+172,Exhibition,148870,377,9,No,Low,Students,Spring
+173,Exhibition,88847,1751,9,Yes,High,Professionals,Spring
+174,Networking Event,136939,860,7,No,High,Mixed,Summer
+175,Networking Event,81163,2503,4,Yes,Medium,Professionals,Fall
+176,Concert,74365,1382,9,Yes,High,Mixed,Spring
+177,Seminar,102026,4656,3,Yes,High,Families,Summer
+178,Seminar,86957,3552,5,No,Low,Students,Fall
+182,Networking Event,165820,369,5,No,Low,Mixed,Fall
+183,Exhibition,258915,4716,10,Yes,Medium,Public,Spring
+184,Festival,189865,709,2,No,Medium,Students,Fall
+185,Conference,161790,4908,10,No,Medium,Students,Winter
+186,Seminar,18220,697,8,Yes,High,Families,Fall
+188,Festival,125689,92,10,No,Medium,Families,Winter
+189,Seminar,255786,616,12,No,Medium,Public,Winter
+191,Networking Event,29118,2782,4,No,Medium,Families,Winter
+192,Concert,28359,3930,3,No,Low,Professionals,Fall
+194,Conference,51601,1111,1,No,Medium,Students,Winter
+195,Exhibition,155043,4758,9,Yes,Medium,Public,Summer
+196,Workshop,220889,4137,3,No,Low,Families,Winter
+197,Concert,286611,769,1,Yes,High,Public,Summer
+198,Exhibition,31545,4032,1,No,High,Students,Winter
+199,Exhibition,187475,2596,10,No,Low,Families,Fall
+200,Seminar,157513,3221,11,No,Medium,Families,Winter
