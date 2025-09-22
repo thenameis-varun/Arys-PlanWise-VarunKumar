@@ -1,8 +1,13 @@
 ## 🔹 Overview
 
-This project explores building an **AI-powered local application** using multiple open-source LLMs and frameworks. The goal is to run models entirely **offline** (no API calls to OpenAI/Anthropic), while integrating them into a **Streamlit-based interface** for interactive usage.
+PlanWise is an **AI-powered local event planning application** built with **Streamlit**. It leverages multiple **open-source LLMs** for intelligent suggestions and predictions while running **completely offline** (no API calls required).
 
-Currently, we are experimenting with different model backends (`GPT4All` and `llama-cpp-python`) to identify the most reliable and performant stack for inference.
+The app allows users to:
+
+* Input basic event details (type, duration, budget, catering).
+* Receive AI-generated greetings, summaries, compliments, **predicted audience type**, and **tech requirements**.
+* Predict **budget suggestions** based on user input.
+* Adjust funds dynamically, with visual **success confidence bars**.
 
 ---
 
@@ -10,135 +15,103 @@ Currently, we are experimenting with different model backends (`GPT4All` and `ll
 
 ### Backend / AI Inference
 
-* **[GPT4All](https://github.com/nomic-ai/gpt4all)**
-  Python bindings and desktop app for running `.gguf` quantized LLMs locally.
+* **[Hugging Face Transformers](https://huggingface.co/docs/transformers/index)**
+  Lightweight LLM for structured text generation.
 
-  * Installed via `pip install gpt4all`
-  * Initially used to attempt inference with DeepSeek models.
+  * Model used: `flan-t5-base`
+  * Runs locally for predicting audience type and tech requirements (AI1).
 
-* **[llama-cpp-python](https://github.com/abetlen/llama-cpp-python)**
-  Python bindings for [llama.cpp](https://github.com/ggerganov/llama.cpp), a fast C++ inference engine supporting `.gguf` models.
-
-  * Installed via `pip install llama-cpp-python`
-  * Currently used for running **DeepSeek-R1-Distill-Qwen-1.5B-Q4\_0.gguf**.
-
-### Models
-
-* **DeepSeek-R1-Distill-Qwen-1.5B-Q4\_0.gguf**
-
-  * Location: `C:\Users\yaswa\AppData\Local\nomic.ai\GPT4All\`
-  * Format: `.gguf` (quantized for efficient CPU inference).
-  * Backend: Loaded using `llama-cpp-python`.
+* **CSV-Based Budget Prediction (AI2)**
+  Uses simple rule-based logic to predict budget (\~10% of input budget in current implementation).
 
 ### Frontend / App
 
 * **[Streamlit](https://streamlit.io/)**
-
-  * Used to build an interactive UI for querying the models.
-  * Runs on Python 3.12 environment.
-  * Provides easy debugging/logging via web interface.
+  Provides a modern, interactive, web-based UI for event planning.
 
 ---
 
-## 🔹 Current Implementation
+## 🔹 Features
 
-### Model Loading (working solution)
+### Step 1: Event Inputs
 
-We are using `llama-cpp-python` to load DeepSeek locally:
+* Event Type: Conference, Concert, Festival, Networking Event, Exhibition, Workshop.
+* Duration (hours)
+* Budget
+* Catering Required (Yes/No)
 
-```python
-from llama_cpp import Llama
+### Step 2: AI Suggestions (AI1)
 
-llm = Llama(
-    model_path=r"C:\Users\yaswa\AppData\Local\nomic.ai\GPT4All\DeepSeek-R1-Distill-Qwen-1.5B-Q4_0.gguf",
-    n_ctx=2048,
-    n_threads=6,
-    verbose=True
-)
+* Generates **greeting**, **summary**, and **compliment** based on user inputs.
+* Predicts **Audience Type** and **Tech Requirement** for autofill in dropdowns.
+* Users can override these predictions manually.
+
+### Step 3: Budget Prediction (AI2)
+
+* Calculates a predicted budget (currently `0.1 × user budget`).
+* Displays an **Event Success Confidence** bar (0–100%) based on the user budget relative to predicted budget.
+
+### Step 4: Funds Adjustment (New Feature)
+
+* Users can **add or remove funds** via a numeric input (+/-).
+* Progress bar visualizes the new budget against a range of 0–200% of predicted budget.
+* Dynamic feedback based on percentage of the bar:
+
+  | Range   | Feedback      |
+  | ------- | ------------- |
+  | 0–25%   | Give UP       |
+  | 25–50%  | Get Lucky     |
+  | 50–75%  | Better        |
+  | 75–100% | Super Success |
+
+---
+
+## 🔹 Example Workflow
+
+1. User enters **Conference**, 4 hours, ₹5000, Catering: Yes.
+2. AI1 responds:
+
+   ```
+   Greeting: Hello! You are planning a Conference.
+   Summary: This event will last 4 hours with a budget of 5000. Catering: Yes.
+   Compliment: Great choice! Your Conference sounds exciting and well thought out.
+   Audience Type: Professionals
+   Tech Requirement: Medium
+   ```
+3. Dropdowns are auto-filled with predicted **Audience Type** and **Tech Requirement**.
+4. AI2 predicts budget: ₹500 (10% of input).
+5. Confidence bar shows \~0% (user budget > predicted budget).
+6. User adjusts funds (+2000). The new bar shows **Super Success**.
+
+---
+
+## 🔹 Key Learnings
+
+* **LLMs for structured predictions** can be integrated locally using Hugging Face models.
+* Simple **rule-based logic** is sufficient for budget prediction in prototype stage.
+* Interactive UI with **dynamic progress bars** improves user experience.
+* Users retain control by overriding AI-suggested values.
+
+---
+
+## 🔹 Tech Requirements
+
 ```
-
-### Inference Function
-
-```python
-def ai1_response(prompt: str) -> str:
-    try:
-        output = llm(
-            prompt,
-            max_tokens=512,
-            temperature=0.7,
-            top_p=0.9,
-            stop=["</s>"]
-        )
-        return output["choices"][0]["text"].strip()
-    except Exception as e:
-        return f"Error during generation: {e}"
+streamlit==1.36.0
+transformers==4.44.0
+torch==2.3.0
+numpy==1.26.4
+pandas==2.2.2
 ```
-
-## 🔹 Challenges Faced
-
-1. **Tokenizer Issue with GPT4All**
-
-   * Tried running `DeepSeek-R1-Distill-Qwen` via `gpt4all` Python bindings.
-   * Encountered:
-
-     ```
-     ValueError: Failed to load the tokenizer. 
-     Please ensure the model supports GPT4All or use a compatible one.
-     ```
-   * Root cause: GPT4All supports only a subset of `.gguf` models (mainly LLaMA/Falcon variants). Qwen-based DeepSeek models are **not yet supported**.
-
-2. **Access Violation / LLaMA Load Failure**
-
-   * When attempting to use `llama-cpp-python` for AI1 with the Qwen-based model, encountered:
-
-     ```
-     OSError: exception: access violation reading 0x0000000000000000
-     ```
-   * Root cause: The model’s tokenizer or backend was incompatible with the CPU and system spec (AMD Ryzen 7 5800HS, 8 cores, 32-bit/64-bit config). Some `.gguf` models require AVX/AVX2 or GPU CUDA support.
-   * Resolution: Switched AI1 to a **GPT4All-compatible model** instead of using llama-cpp backend for this Qwen model.
-
-3. **Environment Conflicts**
-
-   * Needed to ensure Streamlit, GPT4All, and llama-cpp-python were all installed in the **same Python 3.12 environment**.
-   * Resolved by explicitly installing with:
-
-     ```bash
-     C:\Users\yaswa\AppData\Local\Programs\Python\Python312\python.exe -m pip install gpt4all llama-cpp-python
-
-     ```
-3. **Local model Download Limiation**
-    Decision to Use Hugging Face Pipeline Instead of Local Model Download
-
-    Initially considered downloading a local Hugging Face model for offline inference.
-
-    Challenge: Local models require significant disk space and longer load times for CPU inference.
-
-    Resolution: Opted for Hugging Face transformers pipeline with flan-t5-small for lightweight, CPU-friendly, and reliable structured text generation. This also avoids system-specific DLL or CUDA issues.
-
-## 🔹 Lessons Learned
-
-* GPT4All app ≠ Python GPT4All bindings — they are separate.
-* Not all `.gguf` models are cross-compatible between GPT4All and llama-cpp.
-* For **Qwen-based DeepSeek models**, `llama-cpp-python` is the correct backend.
-* Maintaining a clear record of model paths and environments avoids dependency issues.
 
 ---
 
 ## 🔹 Next Steps
 
-* Add support for **multiple selectable models** in the app (DeepSeek, Falcon, Mistral).
-* Benchmark inference speed across GPT4All vs llama-cpp backends.
-* Extend the Streamlit UI with **chat history** and **multi-model dropdown**.
-* Document performance (tokens/sec) and memory usage.
+* Replace AI2 rule-based budget with **ML-trained model** using historical event data.
+* Enhance funds adjustment visualization with **plotly/dynamic markers**.
+* Support **multi-event planning** and **history tracking**.
+* Benchmark LLM inference speed on CPU/GPU.
 
 ---
-
-## 📌 Summary
-
-At this stage, we have:
-
-* Installed and configured **Streamlit**, **GPT4All**, and **llama-cpp-python**.
-* Successfully run **DeepSeek-R1-Distill-Qwen** locally via llama-cpp.
-* Documented **GPT4All tokenizer failure** as a challenge.
-* Established a foundation for **offline AI experimentation** with quantized models.
 
