@@ -1,18 +1,129 @@
-# Arys PlanWise - Smart Event Planner
+## 🔹 Overview
 
-**AI-powered Event Management System**
+This project explores building an **AI-powered local application** using multiple open-source LLMs and frameworks. The goal is to run models entirely **offline** (no API calls to OpenAI/Anthropic), while integrating them into a **Streamlit-based interface** for interactive usage.
 
----
-
-## Description
-Arys PlanWise is an intelligent event planning application designed to assist users in organizing events efficiently. The system leverages **LLM-based guidance** and **ML-driven budget prediction** to provide actionable suggestions, helping users make informed decisions about audience, tech requirements, and budget.
+Currently, we are experimenting with different model backends (`GPT4All` and `llama-cpp-python`) to identify the most reliable and performant stack for inference.
 
 ---
 
-## Key Features
+## 🔹 Tech Stack
 
-- **User Event Submission:** Users provide basic event details such as event type, duration, budget, and catering requirements.  
-- **AI1: Event Advisor (LLM):** Greets users, summarizes their input, compliments their idea, and suggests **audience type** and **tech requirement**. Suggested values are auto-filled but can be manually overridden.  
-- **AI2: Budget Predictor (ML):** Predicts a reasonable budget for the event based on a dataset of historical events.  
-- **Event Success Confidence:** Displays a visual progress bar showing how likely the event is to succeed based on the user-provided budget compared to the predicted budget.  
-- **Interactive Interface:** Built with **Streamlit** for real-time input, feedback, and dynamic updates.  
+### Backend / AI Inference
+
+* **[GPT4All](https://github.com/nomic-ai/gpt4all)**
+  Python bindings and desktop app for running `.gguf` quantized LLMs locally.
+
+  * Installed via `pip install gpt4all`
+  * Initially used to attempt inference with DeepSeek models.
+
+* **[llama-cpp-python](https://github.com/abetlen/llama-cpp-python)**
+  Python bindings for [llama.cpp](https://github.com/ggerganov/llama.cpp), a fast C++ inference engine supporting `.gguf` models.
+
+  * Installed via `pip install llama-cpp-python`
+  * Currently used for running **DeepSeek-R1-Distill-Qwen-1.5B-Q4\_0.gguf**.
+
+### Models
+
+* **DeepSeek-R1-Distill-Qwen-1.5B-Q4\_0.gguf**
+
+  * Location: `C:\Users\yaswa\AppData\Local\nomic.ai\GPT4All\`
+  * Format: `.gguf` (quantized for efficient CPU inference).
+  * Backend: Loaded using `llama-cpp-python`.
+
+### Frontend / App
+
+* **[Streamlit](https://streamlit.io/)**
+
+  * Used to build an interactive UI for querying the models.
+  * Runs on Python 3.12 environment.
+  * Provides easy debugging/logging via web interface.
+
+---
+
+## 🔹 Current Implementation
+
+### Model Loading (working solution)
+
+We are using `llama-cpp-python` to load DeepSeek locally:
+
+```python
+from llama_cpp import Llama
+
+llm = Llama(
+    model_path=r"C:\Users\yaswa\AppData\Local\nomic.ai\GPT4All\DeepSeek-R1-Distill-Qwen-1.5B-Q4_0.gguf",
+    n_ctx=2048,
+    n_threads=6,
+    verbose=True
+)
+```
+
+### Inference Function
+
+```python
+def ai1_response(prompt: str) -> str:
+    try:
+        output = llm(
+            prompt,
+            max_tokens=512,
+            temperature=0.7,
+            top_p=0.9,
+            stop=["</s>"]
+        )
+        return output["choices"][0]["text"].strip()
+    except Exception as e:
+        return f"Error during generation: {e}"
+```
+
+---
+
+## 🔹 Challenges Faced
+
+1. **Tokenizer Issue with GPT4All**
+
+   * Tried running `DeepSeek-R1-Distill-Qwen` via `gpt4all` Python bindings.
+   * Encountered:
+
+     ```
+     ValueError: Failed to load the tokenizer. 
+     Please ensure the model supports GPT4All or use a compatible one.
+     ```
+   * Root cause: GPT4All supports only a subset of `.gguf` models (mainly LLaMA/Falcon variants). Qwen-based DeepSeek models are **not yet supported**.
+
+2. **Environment Conflicts**
+
+   * Needed to ensure Streamlit, GPT4All, and llama-cpp-python were all installed in the **same Python 3.12 environment**.
+   * Resolved by explicitly installing with:
+
+     ```bash
+     C:\Users\yaswa\AppData\Local\Programs\Python\Python312\python.exe -m pip install gpt4all llama-cpp-python
+     ```
+
+---
+
+## 🔹 Lessons Learned
+
+* GPT4All app ≠ Python GPT4All bindings — they are separate.
+* Not all `.gguf` models are cross-compatible between GPT4All and llama-cpp.
+* For **Qwen-based DeepSeek models**, `llama-cpp-python` is the correct backend.
+* Maintaining a clear record of model paths and environments avoids dependency issues.
+
+---
+
+## 🔹 Next Steps
+
+* Add support for **multiple selectable models** in the app (DeepSeek, Falcon, Mistral).
+* Benchmark inference speed across GPT4All vs llama-cpp backends.
+* Extend the Streamlit UI with **chat history** and **multi-model dropdown**.
+* Document performance (tokens/sec) and memory usage.
+
+---
+
+## 📌 Summary
+
+At this stage, we have:
+
+* Installed and configured **Streamlit**, **GPT4All**, and **llama-cpp-python**.
+* Successfully run **DeepSeek-R1-Distill-Qwen** locally via llama-cpp.
+* Documented **GPT4All tokenizer failure** as a challenge.
+* Established a foundation for **offline AI experimentation** with quantized models.
+
