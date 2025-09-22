@@ -1,6 +1,10 @@
 # app.py
+import streamlit as st
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
-import streamlit as st  # ✅ Must be first
+# -------------------------------
+# Page config
+# -------------------------------
 st.set_page_config(
     page_title="PlanWise - Smart Event Planner",
     page_icon="🎪",
@@ -8,180 +12,132 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-import requests
-import random
-from datetime import datetime
-import pandas as pd
-import numpy as np
+# -------------------------------
+# Load LLM for AI1
+# -------------------------------
+@st.cache_resource
+def load_llm():
+    tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
+    model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base")
+    return tokenizer, model
+
+tokenizer, model = load_llm()
 
 # -------------------------------
-# Hugging Face API setup
+# AI1 Function (Greeting + Summary + Audience & Tech prediction)
 # -------------------------------
-HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-small"
-HF_API_TOKEN = "<YOUR_HUGGING_FACE_API_TOKEN>"  # <-- Put your token here
+@st.cache_data
+def ai1_generate(event_type, duration, budget, catering):
+    # Hardcoded Greeting, Summary, Compliment
+    greeting = f"Hello! You are planning a {event_type}."
+    summary = f"This event will last {duration} hours with a budget of {budget}. Catering: {catering}."
+    compliment = f"Great choice! Your {event_type} sounds exciting and well thought out."
 
-headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
-
-def hf_generate(prompt, max_tokens=200):
-    payload = {"inputs": prompt, "parameters": {"max_new_tokens": max_tokens}}
-    response = requests.post(HF_API_URL, headers=headers, json=payload)
-    if response.status_code == 200:
-        output = response.json()
-        if isinstance(output, list) and "generated_text" in output[0]:
-            return output[0]["generated_text"]
-    return "AI could not generate structured response."
-
-# -------------------------------
-# Styling
-# -------------------------------
-st.markdown("""
-<style>
-    .stButton>button {
-        background-color: #4CAF50;
-        color:white;
-        font-size:16px;
-        padding:10px 24px;
-        border-radius:8px;
-    }
-    .stProgress>div>div>div>div {
-        background-color:#4CAF50;
-    }
-</style>
-""", unsafe_allow_html=True)
-
-# -------------------------------
-# App UI
-# -------------------------------
-st.title("🎪 PlanWise - Smart Event Planner")
-st.subheader("AI-powered interactive event management system")
-
-# -------------------------------
-# Step 1: User Inputs
-# -------------------------------
-st.markdown("### Step 1: Enter Event Details")
-
-event_type = st.selectbox(
-    "Event Type", 
-    ["Conference", "Concert", "Festival", "Networking Event", "Exhibition", "Workshop"]
-)
-duration = st.number_input("Duration (hours)", min_value=1, max_value=24, step=1)
-budget = st.number_input("Budget (₹)", min_value=1000, step=500)
-catering = st.selectbox("Catering Required?", ["Yes", "No"])
-
-# -------------------------------
-# AI1 Response Function using HF API
-# -------------------------------
-def ai1_response(event_type, duration, budget, catering):
+    # LLM prompt for Audience Type & Tech Requirement
     prompt = f"""
-You are an event planning assistant.
-
-The user has shared:
-- Event Type: {event_type}
+You are an expert event planner. Based on these event details:
+- Type: {event_type}
 - Duration: {duration} hours
-- Budget: ₹{budget}
+- Budget: {budget}
 - Catering: {catering}
 
-Your tasks:
-1. Greet the user.
-2. Summarize their input values.
-3. Compliment their idea and wish them luck.
-4. Predict:
-   - Audience Type (choose one: Mixed, Families, Public, Professionals, Students)
-   - Tech Requirement (choose one: Low, Medium, High)
-
-Format response exactly like this:
----
-Greeting: <your greeting>
-Summary: <your summary>
-Compliment: <your compliment>
-Audience Type: <one of allowed values>
-Tech Requirement: <one of allowed values>
----
+Choose the most suitable Audience Type (Mixed/Families/Public/Professionals/Students)
+and Tech Requirement (Low/Medium/High). Respond ONLY in this EXACT format:
+Audience Type: <choice>
+Tech Requirement: <choice>
 """
-    output = hf_generate(prompt, max_tokens=200)
+    inputs = tokenizer(prompt, return_tensors="pt")
+    outputs = model.generate(
+        **inputs,
+        max_new_tokens=60,
+        do_sample=True,
+        temperature=0.7
+    )
+    output_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-    # Extract structured block
-    if output.count("---") >= 2:
-        structured = output.split("---")[1].strip()
-    else:
-        structured = output.strip()
-
+    # Defaults
     audience = "Mixed"
     tech = "Medium"
 
-    for line in structured.splitlines():
-        if line.startswith("Audience Type:"):
+    for line in output_text.splitlines():
+        if line.lower().startswith("audience type:"):
             audience = line.split(":", 1)[1].strip()
-        if line.startswith("Tech Requirement:"):
+        if line.lower().startswith("tech requirement:"):
             tech = line.split(":", 1)[1].strip()
 
-    return structured, audience, tech
+    return greeting, summary, compliment, audience, tech
 
 # -------------------------------
-# Step 2: Process Submission
+# AI2 Function 
 # -------------------------------
-if st.button("Submit Event"):
-    message, pred_audience, pred_tech = ai1_response(event_type, duration, budget, catering)
-    st.success(message)
-    
-    # Autofilled dropdowns
-    st.markdown("### Step 2: Confirm AI Suggestions")
+def ai2_predict_budget(user_budget):
+    return int(user_budget * 0.1)
+
+# -------------------------------
+# UI - Step 1: Event Inputs
+# -------------------------------
+st.title("🎪 PlanWise - Smart Event Planner")
+st.markdown("#### Step 1: Provide basic event details")
+
+with st.form("event_inputs"):
+    col1, col2 = st.columns(2)
+    with col1:
+        event_type = st.selectbox("Event Type", ["Conference", "Concert", "Festival", "Networking Event", "Exhibition", "Workshop"])
+        duration = st.number_input("Duration (hours)", min_value=1, max_value=24, step=1)
+    with col2:
+        budget = st.number_input("Budget", min_value=1000, step=500)
+        catering = st.selectbox("Catering Required?", ["Yes", "No"])
+    submitted = st.form_submit_button("Generate AI Plan")
+
+if submitted:
+    # -------------------------------
+    # AI1 Output
+    # -------------------------------
+    greeting, summary, compliment, pred_audience, pred_tech = ai1_generate(event_type, duration, budget, catering)
+
+    st.markdown("### AI Plan (Step 2)")
+    st.info(f"**{greeting}**\n\n{summary}\n\n{compliment}")
+
+    # Autofill dropdowns for Audience Type & Tech Requirement
+    st.markdown("#### Confirm AI Suggestions")
     audience_type = st.selectbox(
-        "Audience Type", 
+        "Audience Type",
         ["Mixed", "Families", "Public", "Professionals", "Students"],
         index=["Mixed", "Families", "Public", "Professionals", "Students"].index(pred_audience)
     )
-    tech_requirement = st.selectbox(
-        "Tech Requirement", 
+    tech_requirements = st.selectbox(
+        "Tech Requirement",
         ["Low", "Medium", "High"],
         index=["Low", "Medium", "High"].index(pred_tech)
     )
-    
+
     # -------------------------------
-    # Step 3: AI2 - Budget Prediction (placeholder)
+    # AI2 Budget Prediction
     # -------------------------------
-    def ai2_predict_budget(event_type, duration, catering):
-        base_budget = {
-            "Conference": 100000,
-            "Concert": 200000,
-            "Festival": 300000,
-            "Networking Event": 50000,
-            "Exhibition": 150000,
-            "Workshop": 40000,
-        }
-        b = base_budget.get(event_type, 50000)
-        if catering == "Yes":
-            b += 20000
-        b += duration * 1000
-        return b
-    
-    predicted_budget = ai2_predict_budget(event_type, duration, catering)
-    st.info(f"💡 Predicted Budget: ₹{predicted_budget}")
-    
+    predicted_budget = ai2_predict_budget(budget)
+    st.markdown(f"#### AI Predicted Budget: **{predicted_budget}**")
+
     # -------------------------------
-    # Step 4: Event Success Confidence
+    # Event Success Confidence Bar
     # -------------------------------
-    def calculate_confidence(user_budget, predicted_budget):
-        lower = 0.95 * predicted_budget
-        upper = 1.05 * predicted_budget
-        if user_budget <= lower:
-            return 0
-        elif user_budget >= upper:
-            return 100
-        else:
-            return int(((user_budget - lower) / (upper - lower)) * 100)
-    
-    confidence = calculate_confidence(budget, predicted_budget)
-    st.markdown("### Step 3: Event Success Confidence")
-    st.progress(confidence / 100)
-    st.write(f"**Confidence Score:** {confidence}%")
-    
-    # Optional: Visual bar with user budget
-    st.markdown(f"Predicted Budget Range: ₹{int(0.95*predicted_budget)} - ₹{int(1.05*predicted_budget)}")
-    st.markdown(f"Your Budget: ₹{budget}")
+    st.markdown("#### Event Success Confidence")
+    min_budget = predicted_budget * 0.95
+    max_budget = predicted_budget * 1.05
+    user_budget = budget
+
+    if user_budget <= min_budget:
+        confidence = 0
+    elif user_budget >= max_budget:
+        confidence = 100
+    else:
+        confidence = int(((user_budget - min_budget) / (max_budget - min_budget)) * 100)
+
+    st.progress(confidence)
+    st.markdown(f"**User Budget: {user_budget} → Event Success Confidence: {confidence}%**")
 
 # -------------------------------
 # Footer
 # -------------------------------
 st.markdown("---")
-st.markdown("PlanWise © 2025 | Powered by AI and Streamlit | AI1: Hugging Face Flan-T5-Small API")
+st.markdown("PlanWise © 2025 | Powered by Local AI and Streamlit")
+
