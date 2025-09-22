@@ -74,8 +74,6 @@ def ai1_response(prompt: str) -> str:
         return f"Error during generation: {e}"
 ```
 
----
-
 ## 🔹 Challenges Faced
 
 1. **Tokenizer Issue with GPT4All**
@@ -89,16 +87,33 @@ def ai1_response(prompt: str) -> str:
      ```
    * Root cause: GPT4All supports only a subset of `.gguf` models (mainly LLaMA/Falcon variants). Qwen-based DeepSeek models are **not yet supported**.
 
-2. **Environment Conflicts**
+2. **Access Violation / LLaMA Load Failure**
+
+   * When attempting to use `llama-cpp-python` for AI1 with the Qwen-based model, encountered:
+
+     ```
+     OSError: exception: access violation reading 0x0000000000000000
+     ```
+   * Root cause: The model’s tokenizer or backend was incompatible with the CPU and system spec (AMD Ryzen 7 5800HS, 8 cores, 32-bit/64-bit config). Some `.gguf` models require AVX/AVX2 or GPU CUDA support.
+   * Resolution: Switched AI1 to a **GPT4All-compatible model** instead of using llama-cpp backend for this Qwen model.
+
+3. **Environment Conflicts**
 
    * Needed to ensure Streamlit, GPT4All, and llama-cpp-python were all installed in the **same Python 3.12 environment**.
    * Resolved by explicitly installing with:
 
      ```bash
      C:\Users\yaswa\AppData\Local\Programs\Python\Python312\python.exe -m pip install gpt4all llama-cpp-python
-     ```
 
----
+     ```
+3. **Local model Download Limiation**
+    Decision to Use Hugging Face Pipeline Instead of Local Model Download
+
+    Initially considered downloading a local Hugging Face model for offline inference.
+
+    Challenge: Local models require significant disk space and longer load times for CPU inference.
+
+    Resolution: Opted for Hugging Face transformers pipeline with flan-t5-small for lightweight, CPU-friendly, and reliable structured text generation. This also avoids system-specific DLL or CUDA issues.
 
 ## 🔹 Lessons Learned
 
