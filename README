@@ -1,0 +1,18 @@
+# Arys PlanWise - Smart Event Planner
+
+**AI-powered Event Management System**
+
+---
+
+## Description
+Arys PlanWise is an intelligent event planning application designed to assist users in organizing events efficiently. The system leverages **LLM-based guidance** and **ML-driven budget prediction** to provide actionable suggestions, helping users make informed decisions about audience, tech requirements, and budget.
+
+---
+
+## Key Features
+
+- **User Event Submission:** Users provide basic event details such as event type, duration, budget, and catering requirements.  
+- **AI1: Event Advisor (LLM):** Greets users, summarizes their input, compliments their idea, and suggests **audience type** and **tech requirement**. Suggested values are auto-filled but can be manually overridden.  
+- **AI2: Budget Predictor (ML):** Predicts a reasonable budget for the event based on a dataset of historical events.  
+- **Event Success Confidence:** Displays a visual progress bar showing how likely the event is to succeed based on the user-provided budget compared to the predicted budget.  
+- **Interactive Interface:** Built with **Streamlit** for real-time input, feedback, and dynamic updates.  
